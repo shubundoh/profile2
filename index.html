@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>珠文堂企画 | 3DCAD/CAM Portfolio</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // エラー回避のため、変数をヘッド部分で早期に宣言します
+        var submitted = false;
+
+        function showSuccessMessage() {
+            const msg = document.getElementById('form-message');
+            const form = document.getElementById('g-form');
+            if (msg) {
+                msg.textContent = 'お問い合わせありがとうございます。送信が完了しました。';
+                msg.className = 'success';
+                msg.style.display = 'block';
+            }
+            if (form) {
+                form.reset();
+            }
+            const submitBtn = document.getElementById('submit-btn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '送信する';
+            }
+        }
+    </script>
+    <style>
+        /* =========================================
+           CSS Variables for Theming (Default: Dark)
+           ========================================= */
+        :root {
+            --bg-color: #1a252f;
+            --text-color: #ECF0F1;
+            --primary-color: #ECF0F1; 
+            --accent-color: #E74C3C;  
+            --card-bg: #2C3E50;
+            --nav-bg: rgba(26, 37, 47, 0.95);
+            --border-color: #34495E;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ECF0F1;
+            --text-color: #2C3E50;
+            --primary-color: #2C3E50;
+            --accent-color: #E74C3C;
+            --card-bg: #FFFFFF;
+            --nav-bg: rgba(236, 240, 241, 0.95);
+            --border-color: #BDC3C7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            overflow-x: hidden;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        a:hover {
+            color: var(--accent-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        h2.section-title {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            color: var(--primary-color);
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background-color var(--transition-speed);
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+            color: #fff;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            box-shadow: 0 1px 10px rgba(0,0,0,0.2);
+            transition: background-color var(--transition-speed);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color var(--transition-speed), transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 5% 2rem;
+            overflow: hidden;
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            line-height: 1.4;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        #skills {
+            padding: 8rem 5%;
+            background-color: var(--card-bg);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            background-color: var(--bg-color);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid transparent;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            border-top-color: var(--accent-color);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        #contact {
+            padding: 8rem 5%;
+            background-color: var(--bg-color);
+        }
+
+        .contact-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        #form-message {
+            display: none;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+        }
+        #form-message.success {
+            display: block;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-btn {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .submit-btn:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        footer {
+            background-color: #1a252f;
+            color: #bdc3c7;
+            padding: 4rem 5% 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: #ecf0f1;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 1rem; padding: 1rem; }
+            nav { width: 100%; justify-content: center; }
+            .contact-wrapper { padding: 2rem 1.5rem; }
+            .skills-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">珠文堂企画</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#hero">ホーム</a></li>
+                <li><a href="#skills">業務内容</a></li>
+                <li><a href="#contact">連絡先</a></li>
+            </ul>
+            <button class="theme-toggle" id="theme-toggle" aria-label="テーマの切り替え">
+                <i class="fas fa-sun"></i>
+            </button>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="hero-content fade-in">
+            <h1 class="hero-title">金型づくりに必要な<br>3次元モデル・ＮＣデータ作成のご案内です。</h1>
+            <p class="hero-subtitle">あんまり優秀なほうではないんですけど、がんばりますので。</p>
+            <a href="#contact" class="btn">お問い合わせ</a>
+        </div>
+    </section>
+
+    <section id="skills">
+        <h2 class="section-title fade-in">主な業務</h2>
+        <div class="skills-grid">
+            <div class="skill-card fade-in" style="transition-delay: 0.1s;">
+                <div class="skill-icon"><i class="fas fa-cube"></i></div>
+                <h3>Modeling</h3>
+                <p>モデリング作業。UEL株式会社のCADmeisterを使用。サーフェース、ソリッド両対応。勾配付け、パーティング面作成など、その後の加工工程がスムーズに進むようなデータ作りを心がけています。</p>
+            </div>
+            <div class="skill-card fade-in" style="transition-delay: 0.2s;">
+                <div class="skill-icon"><i class="fas fa-microchip"></i></div>
+                <h3>CAM Processing</h3>
+                <p>NCデータ出力。いつも慎重に作業を進めてはいますが、この仕事の特性上、どうしても予期せぬトラブルが起きてしまうこともあります。もし何かあったときは、すぐにご連絡ください。誠意を持って、できるだけ早く対応させていただきます。</p>
+            </div>
+            <div class="skill-card fade-in" style="transition-delay: 0.3s;">
+                <div class="skill-icon"><i class="fas fa-cogs"></i></div>
+                <h3>CNC</h3>
+                <p>オリジナルマインド製の卓上CNCを活用。小さな設備ではありますが、鋳出し文字や簡単な湯道形状など、ちょっとした小物パーツの削り出しにも対応しています。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title fade-in">連絡先はこちらです</h2>
+        
+        <div class="contact-wrapper fade-in">
+            <p class="contact-text">
+                制作のご依頼、お見積もり、その他ご相談はお気軽にどうぞ。
+            </p>
+
+            <div id="form-message"></div>
+
+            <form id="g-form" class="contact-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfY3QkU6z-4H2e712mE0uv7vc4xc-FwPiDRIYHWUgsgyQTP4A/formResponse" method="POST" target="hidden_iframe">
+                <div class="form-group">
+                    <label for="name">お名前</label>
+                    <input type="text" id="name" name="entry.2005620554" required placeholder="大谷 翔平">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" id="email" name="entry.1045781291" required placeholder="example@mail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">お問い合わせ内容</label>
+                    <textarea id="message" name="entry.839337160" required placeholder="ご依頼内容やご相談などをご記入ください..."></textarea>
+                </div>
+                
+                <button type="submit" id="submit-btn" class="btn submit-btn">送信する</button>
+            </form>
+
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){window.location='#contact'; showSuccessMessage();}"></iframe>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="mailto:shubundoh@nifty.com" aria-label="Mail"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p class="copyright">&copy; 2026 珠文堂企画. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('g-form');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (form) {
+                form.addEventListener('submit', () => {
+                    submitted = true;
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = '送信中...';
+                    }
+                });
+            }
+
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIcon = themeToggleBtn ? themeToggleBtn.querySelector('i') : null;
+            
+            const currentTheme = localStorage.getItem('theme') || "dark";
+
+            if (currentTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                if (themeIcon) themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                if (themeIcon) themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    let isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                    if (isLight) {
+                        document.documentElement.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'dark');
+                        if (themeIcon) themeIcon.classList.replace('fa-moon', 'fa-sun');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                        if (themeIcon) themeIcon.classList.replace('fa-sun', 'fa-moon');
+                    }
+                });
+            }
+
+            const fadeElements = document.querySelectorAll('.fade-in');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+            fadeElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
